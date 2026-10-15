@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Apex Digital Studio - Next-Gen UI/UX Design, Web Architecture, and High-Conversion Digital Products.">
+  <title>Apex Digital Studio | Next-Gen Digital Agency</title>
+  <style>
+    /* ==========================================================================
+       1. Design Tokens & Theme Variables (Dark & Light Mode)
+       ========================================================================== */
+    :root[data-theme="dark"] {
+      --bg-base: #060913;
+      --bg-surface: #0f1526;
+      --bg-glass: rgba(15, 21, 38, 0.72);
+      --bg-card: rgba(30, 41, 59, 0.45);
+      --bg-card-hover: rgba(30, 41, 59, 0.75);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-primary: #6366f1;
+      --accent-secondary: #06b6d4;
+      --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #06b6d4 100%);
+      --border-subtle: rgba(148, 163, 184, 0.14);
+      --border-glow: rgba(99, 102, 241, 0.45);
+      --shadow-elevated: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+      --error: #f87171;
+      --success: #34d399;
+    }
+
+    :root[data-theme="light"] {
+      --bg-base: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-glass: rgba(255, 255, 255, 0.82);
+      --bg-card: rgba(255, 255, 255, 0.9);
+      --bg-card-hover: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --accent-primary: #4f46e5;
+      --accent-secondary: #0891b2;
+      --accent-gradient: linear-gradient(135deg, #4f46e5 0%, #9333ea 50%, #0891b2 100%);
+      --border-subtle: rgba(15, 23, 42, 0.1);
+      --border-glow: rgba(79, 70, 229, 0.4);
+      --shadow-elevated: 0 20px 35px -10px rgba(15, 23, 42, 0.08);
+      --error: #dc2626;
+      --success: #15803d;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 5.5rem;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.65;
+      overflow-x: hidden;
+      transition: background-color 0.35s ease, color 0.35s ease;
+    }
+
+    /* Ambient Mesh Gradient Orbs */
+    .ambient-glow {
+      position: fixed;
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      filter: blur(130px);
+      opacity: 0.18;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .glow-1 { top: -120px; left: -120px; background: #6366f1; }
+    .glow-2 { bottom: 10%; right: -150px; background: #06b6d4; }
+
+    /* ==========================================================================
+       2. Accessibility & Global Utilities
+       ========================================================================== */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 1rem;
+      background: var(--accent-primary);
+      color: #ffffff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      z-index: 9999;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    :focus-visible {
+      outline: 3px solid var(--accent-secondary);
+      outline-offset: 3px;
+    }
+
+    .container {
+      width: 92%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-padding {
+      padding: 5.5rem 0;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: rgba(99, 102, 241, 0.12);
+      color: var(--accent-secondary);
+      border: 1px solid var(--border-glow);
+      margin-bottom: 1.25rem;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+    }
+
+    .gradient-text {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 3.5rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.85rem, 4vw, 2.75rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+    }
+
+    /* ==========================================================================
+       3. Floating Glassmorphic Header
+       ========================================================================== */
+    .site-header {
+      position: sticky;
+      top: 1rem;
+      z-index: 1000;
+      padding: 0 1rem;
+    }
+
+    .nav-bar {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: var(--bg-glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-elevated);
+    }
+
+    .logo {
+      font-size: 1.35rem;
+      font-weight: 800;
+      text-decoration: none;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--accent-gradient);
+      display: inline-grid;
+      place-items: center;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 900;
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .theme-toggle, .menu-toggle {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .theme-toggle:hover, .menu-toggle:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-1px);
+    }
+
+    .primary-nav {
+      display: none;
+      position: absolute;
+      top: calc(100% + 0.75rem);
+      left: 1rem;
+      right: 1rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow-elevated);
+    }
+
+    .primary-nav.is-open {
+      display: block;
+    }
+
+    .primary-nav ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .primary-nav a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.6rem 1rem;
+      border-radius: 10px;
+      display: block;
+      transition: all 0.2s ease;
+    }
+
+    .primary-nav a:hover,
+    .primary-nav a.active {
+      color: var(--text-primary);
+      background: rgba(99, 102, 241, 0.14);
+    }
+
+    /* ==========================================================================
+       4. Hero Section & Interactive Mockup
+       ========================================================================== */
+    .hero {
+      padding: 4.5rem 0 3.5rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .hero-title {
+      font-size: clamp(2.35rem, 5.5vw, 4rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-desc {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      max-width: 540px;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.65rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-primary {
+      background: var(--accent-gradient);
+      color: #ffffff;
+      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.65);
+    }
+
+    .btn-glass {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border-color: var(--border-subtle);
+    }
+
+    .btn-glass:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-2px);
+    }
+
+    /* Hero Glass Window */
+    .mockup-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 1rem;
+      box-shadow: var(--shadow-elevated);
+      backdrop-filter: blur(12px);
+      position: relative;
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 3.5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .stat-item h3 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-item p {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* ==========================================================================
+       5. Bento Grid Features & Filterable Services
+       ========================================================================== */
+    .bento-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .glass-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--border-glow);
+      background: var(--bg-card-hover);
+      box-shadow: var(--shadow-elevated);
+    }
+
+    .icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid var(--border-glow);
+      display: grid;
+      place-items: center;
+      color: var(--accent-secondary);
+      font-size: 1.35rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .glass-card h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .glass-card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* Interactive Service Filter Tabs */
+    .filter-tabs {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .tab-btn {
+      padding: 0.55rem 1.25rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--accent-primary);
+      color: #ffffff;
+      border-color: var(--accent-primary);
+    }
+
+    .price-tag {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin: 0.5rem 0;
+    }
+
+    .price-tag span {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .feature-list {
+      list-style: none;
+      margin: 0.5rem 0 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .feature-list li {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .feature-list li::before {
+      content: "✓";
+      color: var(--success);
+      font-weight: 800;
+    }
+
+    .glass-card .btn {
+      margin-top: auto;
+    }
+
+    /* ==========================================================================
+       6. Interactive Contact Form & Split Layout
+       ========================================================================== */
+    .contact-grid {
+      display: grid;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    .contact-info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    .info-pill {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+    }
+
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 2.25rem;
+      box-shadow: var(--shadow-elevated);
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .char-count {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    input.input-error, textarea.input-error {
+      border-color: var(--error);
+    }
+
+    .error-msg {
+      color: var(--error);
+      font-size: 0.82rem;
+      display: block;
+      margin-top: 0.35rem;
+      min-height: 1.1rem;
+    }
+
+    .toast-banner {
+      margin-top: 1.25rem;
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--success);
+      color: var(--success);
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    /* ==========================================================================
+       7. Footer
+       ========================================================================== */
+    .site-footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 3rem 0;
+      margin-top: 4rem;
+      background: var(--bg-surface);
+    }
+
+    .footer-flex {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: center;
+      text-align: center;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--text-primary);
+    }
+
+    /* ==========================================================================
+       8. Responsive Breakpoints (Tablet & Desktop)
+       ========================================================================== */
+    @media (min-width: 768px) {
+      .menu-toggle {
+        display: none;
+      }
+
+      .primary-nav {
+        display: block;
+        position: static;
+        background: transparent;
+        border: none;
+        padding: 0;
+        box-shadow: none;
+      }
+
+      .primary-nav ul {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1.1fr 0.9fr;
+      }
+
+      .stats-bar {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .bento-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .bento-wide {
+        grid-column: span 2;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr 1.15fr;
+      }
+
+      .footer-flex {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Ambient Background Lighting -->
+  <div class="ambient-glow glow-1" aria-hidden="true"></div>
+  <div class="ambient-glow glow-2" aria-hidden="true"></div>
+
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Glassmorphic Floating Navbar -->
+  <header class="site-header">
+    <div class="nav-bar">
+      <a href="#home" class="logo" aria-label="Apex Digital Home">
+        <span class="logo-mark">A</span>
+        Apex<span>Studio</span>
+      </a>
+
+      <nav id="primary-navigation" class="primary-nav" aria-label="Primary Navigation">
+        <ul>
+          <li><a href="#home" class="nav-link active">Home</a></li>
+          <li><a href="#about" class="nav-link">Architecture</a></li>
+          <li><a href="#services" class="nav-link">Services</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-controls">
+        <button id="theme-btn" class="theme-toggle" aria-label="Switch color theme" title="Toggle Dark/Light Mode">
+          <span id="theme-icon" aria-hidden="true">☀️</span>
+        </button>
+        <button class="menu-toggle" aria-controls="primary-navigation" aria-expanded="false" aria-label="Toggle navigation menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <!-- 1. Hero Section -->
+    <section id="home" class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <div class="badge">
+              <span class="badge-dot"></span>
+              Available for Q4 2026 Projects
+            </div>
+            <h1 class="hero-title">
+              Crafting High-Velocity <span class="gradient-text">Digital Products</span>
+            </h1>
+            <p class="hero-desc">
+              We engineer ultra-responsive interfaces, accessible design systems, and sub-second web applications that turn visitors into lifelong customers.
+            </p>
+            <div class="btn-group">
+              <a href="#services" class="btn btn-primary">Explore Packages →</a>
+              <a href="#contact" class="btn btn-glass">Book a Strategy Call</a>
+            </div>
+          </div>
+
+          <!-- High-Craft SVG UI Dashboard Mockup -->
+          <div class="mockup-card">
+            <svg viewBox="0 0 540 400" role="img" aria-label="Interactive analytics and UI performance dashboard" style="width:100%; height:auto; display:block; border-radius:12px;">
+              <defs>
+                <linearGradient id="gradCard" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#6366f1"/>
+                  <stop offset="100%" stop-color="#06b6d4"/>
+                </linearGradient>
+                <linearGradient id="chartFill" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#6366f1" stop-opacity="0.45"/>
+                  <stop offset="100%" stop-color="#6366f1" stop-opacity="0.0"/>
+                </linearGradient>
+              </defs>
+              <rect width="540" height="400" rx="14" fill="#0b1120"/>
+              <!-- Top Browser Bar -->
+              <rect x="20" y="20" width="500" height="36" rx="8" fill="#1e293b"/>
+              <circle cx="40" cy="38" r="6" fill="#ef4444"/>
+              <circle cx="58" cy="38" r="6" fill="#f59e0b"/>
+              <circle cx="76" cy="38" r="6" fill="#10b981"/>
+              <rect x="180" y="30" width="180" height="16" rx="4" fill="#0f172a"/>
+              <!-- Left Sidebar -->
+              <rect x="20" y="72" width="110" height="308" rx="10" fill="#1e293b" opacity="0.6"/>
+              <rect x="35" y="92" width="80" height="12" rx="4" fill="#6366f1"/>
+              <rect x="35" y="120" width="65" height="10" rx="4" fill="#475569"/>
+              <rect x="35" y="144" width="72" height="10" rx="4" fill="#475569"/>
+              <rect x="35" y="168" width="55" height="10" rx="4" fill="#475569"/>
+              <!-- Metric Cards -->
+              <rect x="146" y="72" width="180" height="95" rx="10" fill="url(#gradCard)"/>
+              <text x="164" y="102" fill="#e2e8f0" font-family="sans-serif" font-size="12" font-weight="600">LIGHTHOUSE SCORE</text>
+              <text x="164" y="142" fill="#ffffff" font-family="sans-serif" font-size="32" font-weight="800">99.8%</text>
+
+              <rect x="340" y="72" width="180" height="95" rx="10" fill="#1e293b"/>
+              <text x="358" y="102" fill="#94a3b8" font-family="sans-serif" font-size="12" font-weight="600">CONVERSION LIFT</text>
+              <text x="358" y="142" fill="#34d399" font-family="sans-serif" font-size="32" font-weight="800">+142%</text>
+
+              <!-- Graph Area -->
+              <rect x="146" y="182" width="374" height="198" rx="10" fill="#1e293b" opacity="0.75"/>
+              <path d="M170 330 Q 230 290, 270 250 T 380 220 T 490 195 L 490 350 L 170 350 Z" fill="url(#chartFill)"/>
+              <path d="M170 330 Q 230 290, 270 250 T 380 220 T 490 195" fill="none" stroke="#06b6d4" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="270" cy="250" r="6" fill="#ffffff" stroke="#6366f1" stroke-width="3"/>
+              <circle cx="380" cy="220" r="6" fill="#ffffff" stroke="#06b6d4" stroke-width="3"/>
+              <circle cx="490" cy="195" r="6" fill="#ffffff" stroke="#10b981" stroke-width="3"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Metrics Strip -->
+        <div class="stats-bar">
+          <div class="stat-item">
+            <h3>100/100</h3>
+            <p>Core Web Vitals Score</p>
+          </div>
+          <div class="stat-item">
+            <h3>&lt; 0.4s</h3>
+            <p>First Contentful Paint</p>
+          </div>
+          <div class="stat-item">
+            <h3>WCAG AA</h3>
+            <p>Accessibility Certified</p>
+          </div>
+          <div class="stat-item">
+            <h3>99.99%</h3>
+            <p>Global Edge Uptime</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Architecture & About (Bento Grid Layout) -->
+    <section id="about" class="section-padding">
+      <div class="container">
+        <div class="section-header">
+          <span class="badge">System Architecture</span>
+          <h2 class="section-title">Engineered for Speed, Scale &amp; Inclusion</h2>
+          <p class="section-subtitle">Every pixel and line of code is structured around modern web standards and intuitive user journeys.</p>
+        </div>
+
+        <div class="bento-grid">
+          <article class="glass-card bento-wide">
+            <div class="icon-box" aria-hidden="true">⚡</div>
+            <h3>Mobile-First Fluid Architecture</h3>
+            <p>We design from 320px viewports upward using CSS Grid, Flexbox, and fluid clamp() typography so your interface feels native on foldables, tablets, and 5K studio monitors alike.</p>
+          </article>
+
+          <article class="glass-card">
+            <div class="icon-box" aria-hidden="true">♿</div>
+            <h3>Inclusive Accessibility</h3>
+            <p>Semantic landmarks, ARIA live regions, keyboard focus rings, and high-contrast palettes come standard.</p>
+          </article>
+
+          <article class="glass-card">
+            <div class="icon-box" aria-hidden="true">🌐</div>
+            <h3>Cross-Browser Resilience</h3>
+            <p>Tested across Chromium, WebKit (Safari), and Gecko (Firefox) with zero fragile dependencies.</p>
+          </article>
+
+          <article class="glass-card bento-wide">
+            <div class="icon-box" aria-hidden="true">🚀</div>
+            <h3>Zero-Bloat Performance Optimization</h3>
+            <p>By replacing heavy JavaScript bundles with hardware-accelerated CSS and inline SVG vectors, we cut payload sizes by up to 75% and boost organic SEO rankings.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Interactive Services Section -->
+    <section id="services" class="section-padding">
+      <div class="container">
+        <div class="section-header">
+          <span class="badge">Transparent Pricing</span>
+          <h2 class="section-title">Tailored Digital Solutions</h2>
+          <p class="section-subtitle">Filter packages by discipline or select a tier to pre-fill your project inquiry below.</p>
+        </div>
+
+        <!-- Category Filter Buttons -->
+        <div class="filter-tabs" role="tablist" aria-label="Filter services by category">
+          <button class="tab-btn active" data-filter="all" role="tab" aria-selected="true">All Packages</button>
+          <button class="tab-btn" data-filter="development" role="tab" aria-selected="false">Web Engineering</button>
+          <button class="tab-btn" data-filter="design" role="tab" aria-selected="false">UI/UX &amp; Landing</button>
+          <button class="tab-btn" data-filter="optimization" role="tab" aria-selected="false">Audit &amp; SEO</button>
+        </div>
+
+        <div class="bento-grid" id="services-grid">
+          <article class="glass-card service-item" data-category="design">
+            <div class="icon-box" aria-hidden="true">🎨</div>
+            <h3>High-Conversion Landing Page</h3>
+            <p>Ideal for product launches, SaaS campaigns, and rapid market validation.</p>
+            <div class="price-tag">$1,200 <span>/ project</span></div>
+            <ul class="feature-list">
+              <li>Custom Interactive Wireframe &amp; UI</li>
+              <li>Mobile-First Responsive Grid</li>
+              <li>Sub-Second Page Load Speed</li>
+            </ul>
+            <a href="#contact" class="btn btn-glass select-service-btn" data-service="landing">Select Landing Page</a>
+          </article>
+
+          <article class="glass-card service-item" data-category="development" style="border-color: var(--border-glow);">
+            <div class="icon-box" aria-hidden="true">💻</div>
+            <h3>Complete Business Platform</h3>
+            <p>Full multi-section or multi-page architecture for growing brands.</p>
+            <div class="price-tag">$1,800 <span>/ project</span></div>
+            <ul class="feature-list">
+              <li>Bespoke HTML5, CSS3 &amp; Vanilla JS</li>
+              <li>Dark/Light Adaptive Theme System</li>
+              <li>WCAG 2.1 AA Accessibility Compliance</li>
+            </ul>
+            <a href="#contact" class="btn btn-primary select-service-btn" data-service="web-dev">Select Full Platform</a>
+          </article>
+
+          <article class="glass-card service-item" data-category="optimization">
+            <div class="icon-box" aria-hidden="true">🔍</div>
+            <h3>Performance &amp; WCAG Audit</h3>
+            <p>Deep technical overhaul for existing websites struggling with speed or UX.</p>
+            <div class="price-tag">$850 <span>/ audit</span></div>
+            <ul class="feature-list">
+              <li>Core Web Vitals Remediation</li>
+              <li>Screen Reader &amp; Keyboard Navigation Fix</li>
+              <li>Asset &amp; SVG Compression Pipeline</li>
+            </ul>
+            <a href="#contact" class="btn btn-glass select-service-btn" data-service="audit">Select Technical Audit</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Contact & Validated Form Section -->
+    <section id="contact" class="section-padding">
+      <div class="container">
+        <div class="contact-grid">
+          <div>
+            <span class="badge">Let's Collaborate</span>
+            <h2 class="section-title">Ready to Elevate Your Digital Presence?</h2>
+            <p class="section-subtitle">
+              Send us your project brief. Our engineering and design leads review every submission and respond within 24 business hours.
+            </p>
+
+            <div class="contact-info-list">
+              <div class="info-pill">
+                <div class="icon-box" aria-hidden="true" style="margin:0;">📍</div>
+                <div>
+                  <strong>Studio Location</strong>
+                  <p style="color:var(--text-secondary); font-size:0.9rem;">Ahmedabad, Gujarat • Remote Worldwide</p>
+                </div>
+              </div>
+              <div class="info-pill">
+                <div class="icon-box" aria-hidden="true" style="margin:0;">✉️</div>
+                <div>
+                  <strong>Direct Email</strong>
+                  <p style="color:var(--text-secondary); font-size:0.9rem;">hello@apexdigital.studio</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <form id="contact-form" novalidate>
+              <div class="form-group">
+                <label for="full-name">Full Name <span aria-hidden="true">*</span></label>
+                <input type="text" id="full-name" name="fullName" required aria-required="true" placeholder="e.g. Manav Ladani">
+                <span class="error-msg" id="name-error" role="alert"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Work Email <span aria-hidden="true">*</span></label>
+                <input type="email" id="email" name="email" required aria-required="true" placeholder="name@company.com">
+                <span class="error-msg" id="email-error" role="alert"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="service">Selected Package</label>
+                <select id="service" name="service">
+                  <option value="web-dev">Complete Business Platform ($1,800)</option>
+                  <option value="landing">High-Conversion Landing Page ($1,200)</option>
+                  <option value="audit">Performance &amp; WCAG Audit ($850)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="message">
+                  <span>Project Scope &amp; Goals <span aria-hidden="true">*</span></span>
+                  <span class="char-count" id="char-counter">0 / 500</span>
+                </label>
+                <textarea id="message" name="message" rows="4" maxlength="500" required aria-required="true" placeholder="Tell us about your timeline, target audience, and key goals..."></textarea>
+                <span class="error-msg" id="message-error" role="alert"></span>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width:100%;">Launch Project Inquiry →</button>
+
+              <div id="form-success" class="toast-banner" role="status" aria-live="polite" hidden>
+                ✓ Inquiry received! We have logged your brief and will reach out within 24 hours.
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-flex">
+      <p style="color:var(--text-secondary); font-size:0.9rem;">
+        &copy; 2026 Apex Digital Studio. Crafted with semantic HTML5, modern CSS &amp; Vanilla JS.
+      </p>
+      <ul class="footer-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">Architecture</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Dark / Light Theme Switcher
+      const rootEl = document.documentElement;
+      const themeBtn = document.querySelector("#theme-btn");
+      const themeIcon = document.querySelector("#theme-icon");
+
+      themeBtn.addEventListener("click", () => {
+        const currentTheme = rootEl.getAttribute("data-theme");
+        const nextTheme = currentTheme === "dark" ? "light" : "dark";
+        rootEl.setAttribute("data-theme", nextTheme);
+        themeIcon.textContent = nextTheme === "dark" ? "☀️" : "🌙";
+      });
+
+      // 2. Mobile Navigation Drawer
+      const menuToggle = document.querySelector(".menu-toggle");
+      const primaryNav = document.querySelector("#primary-navigation");
+      const navLinks = document.querySelectorAll(".nav-link");
+
+      if (menuToggle && primaryNav) {
+        menuToggle.addEventListener("click", () => {
+          const isExpanded = menuToggle.getAttribute("aria-expanded") === "true";
+          menuToggle.setAttribute("aria-expanded", String(!isExpanded));
+          primaryNav.classList.toggle("is-open");
+        });
+
+        navLinks.forEach((link) => {
+          link.addEventListener("click", () => {
+            navLinks.forEach((l) => l.classList.remove("active"));
+            link.classList.add("active");
+            primaryNav.classList.remove("is-open");
+            menuToggle.setAttribute("aria-expanded", "false");
+          });
+        });
+      }
+
+      // 3. Interactive Service Category Filtering
+      const tabBtns = document.querySelectorAll(".tab-btn");
+      const serviceCards = document.querySelectorAll(".service-item");
+
+      tabBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const filter = btn.getAttribute("data-filter");
+
+          tabBtns.forEach((b) => {
+            b.classList.remove("active");
+            b.setAttribute("aria-selected", "false");
+          });
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
+
+          serviceCards.forEach((card) => {
+            const category = card.getAttribute("data-category");
+            if (filter === "all" || category === filter) {
+              card.style.display = "flex";
+            } else {
+              card.style.display = "none";
+            }
+          });
+        });
+      });
+
+      // Pre-select service in form when clicking a package button
+      const selectServiceBtns = document.querySelectorAll(".select-service-btn");
+      const serviceSelect = document.querySelector("#service");
+
+      selectServiceBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const val = btn.getAttribute("data-service");
+          if (serviceSelect && val) {
+            serviceSelect.value = val;
+          }
+        });
+      });
+
+      // 4. Live Character Counter & Form Validation
+      const contactForm = document.querySelector("#contact-form");
+      const messageInput = document.querySelector("#message");
+      const charCounter = document.querySelector("#char-counter");
+
+      if (messageInput && charCounter) {
+        messageInput.addEventListener("input", () => {
+          charCounter.textContent = `${messageInput.value.length} / 500`;
+        });
+      }
+
+      if (contactForm) {
+        contactForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          let isValid = true;
+
+          const nameInput = document.querySelector("#full-name");
+          const emailInput = document.querySelector("#email");
+
+          const nameError = document.querySelector("#name-error");
+          const emailError = document.querySelector("#email-error");
+          const messageError = document.querySelector("#message-error");
+          const successBanner = document.querySelector("#form-success");
+
+          [nameError, emailError, messageError].forEach((el) => (el.textContent = ""));
+          [nameInput, emailInput, messageInput].forEach((el) => el.classList.remove("input-error"));
+          successBanner.hidden = true;
+
+          if (nameInput.value.trim().length < 2) {
+            nameError.textContent = "Please enter your full name (minimum 2 characters).";
+            nameInput.classList.add("input-error");
+            isValid = false;
+          }
+
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailPattern.test(emailInput.value.trim())) {
+            emailError.textContent = "Please enter a valid work email address.";
+            emailInput.classList.add("input-error");
+            isValid = false;
+          }
+
+          if (messageInput.value.trim().length < 10) {
+            messageError.textContent = "Please share at least 10 characters about your project scope.";
+            messageInput.classList.add("input-error");
+            isValid = false;
+          }
+
+          if (isValid) {
+            contactForm.reset();
+            charCounter.textContent = "0 / 500";
+            successBanner.hidden = false;
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
